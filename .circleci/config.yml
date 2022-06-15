@@ -10,14 +10,14 @@ jobs:
       - checkout
       - run:
           name: terraform plan
-          command: cd terraform && terraform init && terraform plan
+          command: cd terraform/base && terraform init && terraform plan
   apply:
     executor: infra-agent
     steps:
       - checkout
       - run:
           name: terraform apply
-          command: cd terraform && terraform init && terraform apply -auto-approve
+          command: cd terraform/base && terraform init && terraform apply -auto-approve
 
 workflows:
   infrastructure:
