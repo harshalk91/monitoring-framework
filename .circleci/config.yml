@@ -1,0 +1,34 @@
+version: 2.1
+executors:
+  infra-agent:
+    docker:
+      - image: zenika/terraform-aws-cli:latest
+jobs:
+  plan:
+    executor: infra-agent
+    steps:
+      - checkout
+      - run:
+          name: terraform plan
+          command: cd terraform && terraform init && terraform plan
+  apply:
+    executor: infra-agent
+    steps:
+      - checkout
+      - run:
+          name: terraform apply
+          command: cd terraform && terraform init && terraform apply -auto-approve
+
+workflows:
+  infrastructure:
+    jobs:
+      - plan:
+          context: demo
+      - approval-gate:
+          type: approval
+          requires:
+            - plan
+      - apply:
+          context: demo
+          requires:
+            - approval-gate
