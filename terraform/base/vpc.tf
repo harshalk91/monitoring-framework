@@ -5,7 +5,7 @@ module "vpc" {
   name            = "monitoring-framework-vpc"
   cidr            = "192.168.1.0/24"
 
-  azs             = ["us-east-1"]
+  azs             = ["us-east-1a"]
   public_subnets  = ["192.168.1.0/24"]
   enable_nat_gateway  = false
 
