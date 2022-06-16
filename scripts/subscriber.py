@@ -7,9 +7,10 @@ app = Flask(__name__)
 
 def msg_process(msg, tstamp):
     js = json.loads(msg)
-    msg = 'Region: {0} / Alarm: {1}'.format(
-        js['Region'], js['AlarmName']
-    )
+    print(js)
+    # msg = 'Region: {0} / Alarm: {1}'.format(
+    #     js['Region'], js['AlarmName']
+    # )
     # do stuff here, like calling your favorite SMS gateway API
 
 
