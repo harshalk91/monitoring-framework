@@ -41,7 +41,7 @@ data "aws_iam_policy_document" "sns_topic_policy" {
 }
 
 resource "aws_sns_topic_subscription" "event_subscription" {
-  endpoint  = "http://ip172-18-0-75-calakd09jotg00824340-5000.direct.labs.play-with-docker.com/"
+  endpoint  = "http://ip172-18-0-58-caljq2433d5g00e20b20-5000.direct.labs.play-with-docker.com/"
   endpoint_auto_confirms = true
   protocol  = "http"
   topic_arn = aws_sns_topic.generic_events.arn
