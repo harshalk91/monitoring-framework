@@ -18,9 +18,18 @@ def sns():
     # AWS sends JSON with text/plain mimetype
     try:
         js = json.loads(request.data)
-        print(js)
     except:
         pass
+
+    hdr = request.headers.get('X-Amz-Sns-Message-Type')
+    # subscribe to the SNS topic
+    if hdr == 'SubscriptionConfirmation' and 'SubscribeURL' in js:
+        r = requests.get(js['SubscribeURL'])
+
+    if hdr == 'Notification':
+        msg_process(js['Message'], js['Timestamp'])
+
+    return 'OK\n'
 
 
 if __name__ == '__main__':
