@@ -1,0 +1,3 @@
+{
+  "aws.ec2": "/opt/monitoring-framework/terraform/ec2"
+}
