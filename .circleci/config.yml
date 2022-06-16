@@ -32,4 +32,3 @@ workflows:
           context: demo
           requires:
             - approval-gate
-      -
