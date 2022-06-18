@@ -2,8 +2,8 @@ terraform {
   backend "s3" {
 #    encrypt        = true
     bucket         = "tfstates-devops"
-    key            = "monitoring-framework/base.tf"
-#    dynamodb_table = "terraform-state-lock-dynamo"
+    key            = "monitoring-framework/s3.tf"
+#    dynamodb_table = "terraform-state-lock-ec2"
     region         = "us-east-1"
   }
 }
