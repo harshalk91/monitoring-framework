@@ -11,38 +11,32 @@ resource "aws_cloudwatch_event_rule" "generic_event_rule" {
 EOF
 }
 
-resource "aws_cloudwatch_event_target" "sns" {
-  rule      = aws_cloudwatch_event_rule.generic_event_rule.name
-  target_id = "SendToSNS"
-  arn       = aws_sns_topic.generic_events.arn
+resource "aws_sqs_queue" "standard_queue" {
+  name = "monitoring-queue"
+  delay_seconds = "30"
 }
 
-resource "aws_sns_topic" "generic_events" {
-  name = "generic-topic"
-}
-
-resource "aws_sns_topic_policy" "default" {
-  arn    = aws_sns_topic.generic_events.arn
-  policy = data.aws_iam_policy_document.sns_topic_policy.json
-}
-
-data "aws_iam_policy_document" "sns_topic_policy" {
+data "aws_iam_policy_document" "queue" {
   statement {
-    effect  = "Allow"
-    actions = ["SNS:Publish"]
-
+    sid     = "events-policy"
+    actions = ["sqs:SendMessage"]
     principals {
       type        = "Service"
       identifiers = ["events.amazonaws.com"]
     }
-
-    resources = [aws_sns_topic.generic_events.arn]
+    resources = [
+      aws_sqs_queue.standard_queue.arn
+    ]
   }
 }
 
-resource "aws_sns_topic_subscription" "event_subscription" {
-  endpoint  = "http://ip172-18-0-58-caljq2433d5g00e20b20-5000.direct.labs.play-with-docker.com/"
-  endpoint_auto_confirms = true
-  protocol  = "http"
-  topic_arn = aws_sns_topic.generic_events.arn
+resource "aws_sqs_queue_policy" "queue" {
+  queue_url = aws_sqs_queue.standard_queue.id
+  policy    = data.aws_iam_policy_document.queue.json
+}
+
+resource "aws_cloudwatch_event_target" "sqs_target" {
+  rule      = aws_cloudwatch_event_rule.generic_event_rule.name
+  target_id = "SendToSQS"
+  arn       = aws_sqs_queue.standard_queue.arn
 }

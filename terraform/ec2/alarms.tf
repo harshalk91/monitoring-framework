@@ -1,5 +1,5 @@
 locals {
-  alarm_name          = ["_NetworkOut", "_CPUUtilisation", "StatusCheckFailed"]
+  alarm_name          = ["${var.instance_id}_NetworkOut", "${var.instance_id}_CPUUtilisation", "${var.instance_id}_StatusCheckFailed"]
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = [1, 1, 2]
   metric_name         = ["DiskReadOps", "NetworkOut", "CPUUtilisation"]
@@ -22,4 +22,7 @@ resource "aws_cloudwatch_metric_alarm" "metric-alarm" {
   statistic           = local.statistic
   threshold           = element(local.threshold, count.index)
   alarm_description   = local.alarm_description
+  tags = {
+    mapped_to = var.instance_id
+  }
 }
