@@ -20,7 +20,7 @@ data "aws_iam_policy_document" "queue" {
     actions = ["sqs:SendMessage"]
     condition {
       test     = "ArnEquals "
-      values   = "arn:aws:events:us-east-1:745946109524:rule/s3-event"
+      values   = ["arn:aws:events:us-east-1:745946109524:rule/s3-event"]
       variable = "aws:SourceArn"
     }
     principals {
