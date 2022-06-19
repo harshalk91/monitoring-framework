@@ -15,22 +15,6 @@ data "aws_iam_policy_document" "queue" {
       aws_sqs_queue.standard_queue.arn
     ]
   }
-  statement {
-    sid     = "s3-events-policy"
-    actions = ["sqs:SendMessage"]
-    condition {
-      test     = "ArnEquals "
-      values   = ["arn:aws:events:us-east-1:745946109524:rule/s3-event"]
-      variable = "aws:SourceArn"
-    }
-    principals {
-      type        = "Service"
-      identifiers = ["events.amazonaws.com"]
-    }
-    resources = [
-      aws_sqs_queue.standard_queue.arn
-      ]
-  }
 }
 
 resource "aws_sqs_queue_policy" "queue" {
