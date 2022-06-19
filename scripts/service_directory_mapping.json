@@ -1,3 +1,4 @@
 {
-  "aws.ec2": "C:\\Users\\harsh\\PycharmProjects\\monitoring-framework\\terraform\\ec2"
+  "aws.ec2": "C:\\Users\\harsh\\PycharmProjects\\monitoring-framework\\terraform\\ec2",
+  "aws.s3": "C:\\Users\\harsh\\PycharmProjects\\monitoring-framework\\terraform\\s3"
 }
