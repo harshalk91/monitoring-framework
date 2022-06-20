@@ -57,13 +57,13 @@ def process_message(message_body):
         print(tf_init)
         if msg['detail']['state'] == 'running':
             pprint("{} - {}".format(msg['detail']['instance-id'], msg['detail']['state']))
-            apply = tf_apply(dir_mapping_file['aws.ec2'], "instance-id", tag=msg['detail']['instance-id'])
+            apply = tf_apply(dir_mapping_file['aws.ec2'], "instance_id", tag=msg['detail']['instance-id'])
             print(apply)
 
         if msg['detail']['state'] == 'stopping':
             pprint("{} - {}".format(msg['detail']['instance-id'], msg['detail']['state']))
             target = "aws_cloudwatch_metric_alarm.metric-alarm"
-            destroy = tf_destroy(dir_mapping_file['aws.ec2'], "instance-id", tag=msg['detail']['instance-id'])
+            destroy = tf_destroy(dir_mapping_file['aws.ec2'], "instance_id", tag=msg['detail']['instance-id'])
             print(destroy)
 
     if msg['source'] == 'aws.s3':
