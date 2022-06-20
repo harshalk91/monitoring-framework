@@ -51,7 +51,7 @@ def tf_destroy(directory_path, parameter_key, tag):
 def process_message(message_body):
     msg = json.loads(message_body)
     if msg['source'] == 'aws.ec2':
-        print("Message received. Type - EC2. Instance id - {}, State - {}", format(msg['detail']['instance-id'],
+        print("Message received. Type - EC2. Instance id - {}, State - {}".format(msg['detail']['instance-id'],
                                                                                    msg['detail']['state']))
         tf_init = tf_initialize(dir_mapping_file['aws.ec2'], msg['detail']['instance-id'])
         print(tf_init)
