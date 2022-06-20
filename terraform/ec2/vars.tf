@@ -28,6 +28,7 @@ variable "statistic" {
 
 variable "threshold" {
   type = list(number)
+  default = [1000, 50000, 80]
 }
 
 variable "alarm_description" {

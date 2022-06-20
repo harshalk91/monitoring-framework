@@ -1,5 +1,5 @@
 locals {
-  alarm_name          = ["${var.instance_id}_NetworkOut", "${var.instance_id}_CPUUtilisation", "${var.instance_id}_StatusCheckFailed"]
+  alarm_name          = ["${var.instance_id}_DiskReadOps", "${var.instance_id}_NetworkOut", "${var.instance_id}_CPUUtilisation"]
 }
 
 module "ec2_monitors" {

@@ -8,11 +8,12 @@ import os
 sqs = boto3.resource("sqs", region_name='us-east-1')
 queue = sqs.get_queue_by_name(QueueName="monitoring-queue")
 
-# logger.debug("Opening service directory mapping")
+# Opening service directory mapping
 with open(os.path.abspath(os.getcwd()) + "/service_directory_mapping.json", 'r') as dir_mapping:
     dir_mapping_file = json.loads(dir_mapping.read())
 
 
+# Initialization
 def tf_initialize(directory_path, id):
     tf = Terraform(working_dir=directory_path)
     os.chdir(directory_path)
@@ -22,15 +23,7 @@ def tf_initialize(directory_path, id):
     return "Terraform initialization is successful"
 
 
-def tf_plan(directory_path, tag):
-    tf = Terraform(working_dir=directory_path)
-    os.chdir(directory_path)
-    return_code, stdout, stderr = tf.cmd("plan -var=instance_id={}".format(tag))
-    if stderr:
-        raise ValueError('Terraform Plan Failed at {}'.format(str(directory_path)))
-    return "Terraform plan is successful"
-
-
+# Apply
 def tf_apply(directory_path, parameter_key, tag):
     tf = Terraform(working_dir=directory_path)
     os.chdir(directory_path)
@@ -41,6 +34,7 @@ def tf_apply(directory_path, parameter_key, tag):
     return stdout
 
 
+# Destroy
 def tf_destroy(directory_path, parameter_key, tag):
     tf = Terraform(working_dir=directory_path)
     os.chdir(directory_path)
@@ -53,9 +47,12 @@ def tf_destroy(directory_path, parameter_key, tag):
     return stdout
 
 
+# Processing the message
 def process_message(message_body):
     msg = json.loads(message_body)
     if msg['source'] == 'aws.ec2':
+        print("Message received. Type - EC2. Instance id - {}, State - {}", format(msg['detail']['instance-id'],
+                                                                                   msg['detail']['state']))
         tf_init = tf_initialize(dir_mapping_file['aws.ec2'], msg['detail']['instance-id'])
         print(tf_init)
         if msg['detail']['state'] == 'running':
@@ -70,17 +67,21 @@ def process_message(message_body):
             print(destroy)
 
     if msg['source'] == 'aws.s3':
+        print("Message received. Type - S3. Bucket Name - {}, State - {}".format(
+            msg['detail']['requestParameters']['bucketName'],
+            msg['detail']['eventName']))
         tf_init = tf_initialize(dir_mapping_file['aws.s3'], msg['detail']['requestParameters']['bucketName'])
         print(tf_init)
 
         if msg['detail']['eventName'] == "CreateBucket":
             pprint("{} - {}".format(msg['detail']['requestParameters']['bucketName'], msg['detail']['eventName']))
-            apply = tf_apply(dir_mapping_file['aws.s3'], "bucket_name", tag=msg['detail']['requestParameters']['bucketName'])
+            apply = tf_apply(dir_mapping_file['aws.s3'], "bucket_name",
+                             tag=msg['detail']['requestParameters']['bucketName'])
             print(apply)
         if msg['detail']['eventName'] == "DeleteBucket":
-            destroy = tf_destroy(dir_mapping_file['aws.s3'], "bucket_name", tag=msg['detail']['requestParameters']['bucketName'])
+            destroy = tf_destroy(dir_mapping_file['aws.s3'], "bucket_name",
+                                 tag=msg['detail']['requestParameters']['bucketName'])
             print(destroy)
-    return "ok\n"
 
 
 if __name__ == "__main__":
@@ -90,5 +91,4 @@ if __name__ == "__main__":
         for message in messages:
             process_message(message.body)
             message.delete()
-
         time.sleep(1)
