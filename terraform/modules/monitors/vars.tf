@@ -34,3 +34,7 @@ variable "threshold" {
 variable "alarm_description" {
   type = string
 }
+
+variable "sns_topic_arn" {
+  type = string
+}

@@ -9,5 +9,7 @@ resource "aws_cloudwatch_metric_alarm" "metric-alarm" {
   statistic           = var.statistic
   threshold           = element(var.threshold, count.index)
   alarm_description   = var.alarm_description
+  alarm_actions       = [var.sns_topic_arn]
+  ok_actions          = [var.sns_topic_arn]
   tags                = var.tags
 }
