@@ -15,3 +15,4 @@
 6. Once script identifies these two values, it proceeds with either 
    1. Cloudwatch Alarms Creation - When event type is Create
    2. Cloudwatch Alarm Deletion -  When event type is Delete
+7. Once Cloudwatch alarms are created or deleted, the message gets deleted from the queue. 
