@@ -1,6 +1,6 @@
 resource "aws_sqs_queue" "standard_queue" {
   name = "monitoring-queue"
-  delay_seconds = "30"
+  delay_seconds = "5"
 }
 
 data "aws_iam_policy_document" "queue" {
